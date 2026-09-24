@@ -1,0 +1,8 @@
+@model Comentario
+<li class="comentario">
+    <div>
+        <strong class="comentario-usuario">@Model.NombreUsuario</strong>
+        <span class="comentario-texto">@Model.Texto</span>
+    </div>
+    <time class="comentario-fecha small text-muted">@Model.FechaFormateada</time>
+</li>

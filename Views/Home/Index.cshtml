@@ -1,0 +1,49 @@
+@model List<Publicacion>
+@{
+    ViewData["Title"] = "Inicio";
+    bool hayMas = ViewBag.HayMas;
+}
+
+@* Token antifalsificación: feed.js lo lee y lo manda en el header de cada POST con Fetch *@
+@Html.AntiForgeryToken()
+
+<div class="contenedor-feed mx-auto">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 m-0">Publicaciones</h1>
+        <a asp-controller="Publicacion" asp-action="Crear" class="btn btn-primary btn-sm">+ Nueva publicación</a>
+    </div>
+
+    <section id="feed"
+             data-url-megusta="@Url.Action("MeGusta", "Publicacion")"
+             data-url-comentar="@Url.Action("Comentar", "Publicacion")"
+             data-url-obtener-mas="@Url.Action("ObtenerMas", "Publicacion")"
+             data-url-login="@Url.Action("Login", "Account")"
+             data-imagen-default="@Url.Content("~/img/sin-imagen.svg")">
+        @foreach (Publicacion publicacion in Model)
+        {
+            <partial name="_Publicacion" model="publicacion" />
+        }
+    </section>
+
+    @if (Model.Count == 0)
+    {
+        <p class="text-center text-muted">Todavía no hay publicaciones. ¡Sé el primero en publicar!</p>
+    }
+
+    <div class="text-center mb-4">
+        <button type="button" id="btn-ver-mas" class="btn btn-outline-primary" hidden="@(!hayMas)">Ver más</button>
+        <p id="fin-feed" class="text-muted small m-0" hidden="@(hayMas || Model.Count == 0)">No hay más publicaciones.</p>
+    </div>
+</div>
+
+@* Moldes vacíos que feed.js clona para agregar publicaciones y comentarios nuevos *@
+<template id="tpl-publicacion">
+    <partial name="_Publicacion" model="new Publicacion()" />
+</template>
+<template id="tpl-comentario">
+    <partial name="_Comentario" model="new Comentario()" />
+</template>
+
+@section Scripts {
+    <script src="~/js/feed.js" asp-append-version="true"></script>
+}

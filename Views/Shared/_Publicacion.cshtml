@@ -1,0 +1,44 @@
+@model Publicacion
+@*
+    Este parcial se usa de dos formas:
+    1) Razor lo renderiza para las primeras publicaciones de la página.
+    2) Se renderiza vacío dentro de un <template> y feed.js lo clona y completa
+       con los datos que llegan por Fetch (Ver más).
+*@
+<article class="publicacion card shadow-sm mb-4" data-id="@Model.Id">
+    <img class="publicacion-imagen card-img-top" src="@Model.UrlImagen" alt="@Model.Titulo" loading="lazy"
+         onerror="this.onerror=null;this.src='@Url.Content("~/img/sin-imagen.svg")'" />
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-baseline small text-muted mb-2">
+            <span>@@<strong class="publicacion-usuario">@Model.NombreUsuario</strong></span>
+            <time class="publicacion-fecha">@Model.FechaFormateada</time>
+        </div>
+        <h2 class="publicacion-titulo h5 card-title">@Model.Titulo</h2>
+        <p class="publicacion-descripcion card-text">@Model.Descripcion</p>
+
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-megusta btn btn-sm @(Model.UsuarioDioMeGusta ? "activo" : "")"
+                    aria-pressed="@(Model.UsuarioDioMeGusta ? "true" : "false")">
+                @(Model.UsuarioDioMeGusta ? "♥ Ya no me gusta" : "♡ Me gusta")
+            </button>
+            <span class="small text-muted"><span class="megusta-cantidad">@Model.CantidadMeGusta</span> Me gusta</span>
+        </div>
+    </div>
+
+    <div class="card-footer bg-white">
+        <ul class="lista-comentarios list-unstyled mb-3">
+            @foreach (Comentario comentario in Model.Comentarios)
+            {
+                <partial name="_Comentario" model="comentario" />
+            }
+        </ul>
+        <form class="form-comentario">
+            <div class="input-group input-group-sm">
+                <input type="text" name="texto" class="form-control" placeholder="Escribí un comentario..."
+                       maxlength="500" aria-label="Comentario" autocomplete="off" />
+                <button type="submit" class="btn btn-primary">Comentar</button>
+            </div>
+            <div class="error-comentario small text-danger mt-1" hidden></div>
+        </form>
+    </div>
+</article>

@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Nueva publicación";
+}
+
+<div class="contenedor-feed mx-auto">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h1 class="h4 mb-4">Nueva publicación</h1>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger py-2">@ViewBag.Error</div>
+            }
+
+            <form asp-controller="Publicacion" asp-action="Crear" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <input type="file" id="imagen" name="imagen" class="form-control"
+                           accept=".jpg,.jpeg,.png,.gif,.webp" required />
+                    <div class="form-text">JPG, PNG, GIF o WEBP. Máximo 5 MB.</div>
+                    <img id="vista-previa" class="vista-previa mt-3 rounded" alt="Vista previa de la imagen" hidden />
+                </div>
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Título</label>
+                    <input type="text" id="titulo" name="titulo" class="form-control"
+                           value="@ViewBag.Titulo" maxlength="200" required />
+                </div>
+                <div class="mb-4">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required>@ViewBag.Descripcion</textarea>
+                </div>
+                <div class="d-flex gap-2 justify-content-end">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Publicar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Muestra una vista previa de la imagen elegida antes de publicar
+        document.getElementById('imagen').addEventListener('change', (e) => {
+            const preview = document.getElementById('vista-previa');
+            const archivo = e.target.files[0];
+            if (!archivo) {
+                preview.hidden = true;
+                return;
+            }
+            preview.src = URL.createObjectURL(archivo);
+            preview.hidden = false;
+        });
+    </script>
+}
