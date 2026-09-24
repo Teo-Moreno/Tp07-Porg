@@ -5,7 +5,9 @@ namespace Tp07.Models;
 
 public static class BD
 {
-    public static string ConnectionString { get; set; } = "";
+    private static string ConnectionString =
+        @"Server=localhost;Database=DBRedSocial;User Id=alumno;Password=alumno;TrustServerCertificate=True;";
+
 
     private static SqlConnection Conectar() => new SqlConnection(ConnectionString);
 
